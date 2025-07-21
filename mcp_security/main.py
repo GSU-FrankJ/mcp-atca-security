@@ -10,7 +10,6 @@ import os
 from contextlib import asynccontextmanager
 from typing import Dict, Any
 
-import structlog
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,12 +17,12 @@ from fastapi.responses import JSONResponse
 import uvicorn
 
 from .utils.config import get_settings
-from .utils.logging import setup_logging
+from .utils.logging import setup_logging, get_logger, set_request_context, clear_request_context
 from .orchestrator.security_orchestrator import SecurityOrchestrator
 
 
-# Configure structured logging
-logger = structlog.get_logger(__name__)
+# Configure structured logging with our SecurityLogger
+logger = get_logger(__name__)
 
 # Initialize security bearer token
 security = HTTPBearer()
@@ -42,10 +41,22 @@ async def lifespan(app: FastAPI):
     """
     global orchestrator
     
+    # Initialize configuration first
+    settings = get_settings()
+    
+    # Setup logging infrastructure BEFORE any other logging
+    setup_logging(settings)
+    
     try:
         # Startup: Initialize security orchestrator
-        logger.info("Starting MCP Security Defense System")
-        settings = get_settings()
+        logger.info(
+            "Starting MCP+ATCA Security Defense System",
+            version="0.1.0",
+            environment="development" if settings.debug else "production",
+            log_level=settings.log_level,
+            host=settings.host,
+            port=settings.port
+        )
         
         orchestrator = SecurityOrchestrator(settings)
         await orchestrator.initialize()
@@ -54,10 +65,15 @@ async def lifespan(app: FastAPI):
         yield
         
     except Exception as e:
-        logger.error("Failed to initialize security orchestrator", error=str(e))
+        logger.critical(
+            "Failed to initialize security orchestrator", 
+            error_type=type(e).__name__,
+            error_message=str(e)
+        )
         raise
     finally:
         # Shutdown: Clean up resources
+        logger.info("Shutting down MCP+ATCA Security Defense System")
         if orchestrator:
             await orchestrator.shutdown()
         logger.info("MCP Security Defense System shutdown complete")
@@ -281,11 +297,21 @@ async def get_metrics() -> Dict[str, Any]:
 
 
 if __name__ == "__main__":
-    # Set up logging
-    setup_logging()
-    
-    # Get configuration
+    # Get configuration first
     settings = get_settings()
+    
+    # Set up logging with configuration
+    setup_logging(settings)
+    
+    # Log startup information
+    logger.info(
+        "Starting MCP+ATCA Security Server",
+        host=settings.host,
+        port=settings.port,
+        reload=settings.reload,
+        workers=1 if settings.reload else settings.worker_processes,
+        log_level=settings.log_level
+    )
     
     # Run the application
     uvicorn.run(

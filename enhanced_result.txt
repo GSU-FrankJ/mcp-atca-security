@@ -1,0 +1,56 @@
+🧪 Enhanced Adversarial Detection Test Suite
+============================================================
+
+=== Testing Feature Extraction ===
+✅ Normal prompt feature extraction works
+✅ Suspicious prompt feature extraction works
+✅ ESA-like prompt feature extraction works
+
+=== Testing ESA Detection ===
+✅ ESA detection correctly ignores normal prompts
+✅ ESA detection correctly identifies attacks
+
+=== Testing CAP Detection ===
+✅ CAP detection correctly ignores normal prompts
+✅ CAP detection correctly identifies attacks
+
+=== Testing Multi-granularity Detection ===
+✅ Multi-granularity detection works for inconsistent levels
+✅ Multi-granularity detection correctly ignores consistent levels
+
+=== Testing Ensemble Detection ===
+✅ Ensemble detection returns valid results
+✅ Ensemble uncertainty quantification works
+
+=== Testing Dynamic Thresholds ===
+✅ Initial thresholds: {'esa': 0.6, 'cap': 0.5, 'ensemble': 0.5, 'multi_granularity': 0.6}
+✅ Updated thresholds: {'esa': 0.6066666666666667, 'cap': 0.5066666666666667, 'ensemble': 0.5066666666666667, 'multi_granularity': 0.6066666666666667}
+✅ Dynamic threshold adjustment works
+✅ Threshold statistics retrieval works
+
+=== Testing Performance ===
+✅ Processed 8 prompts in 0.25ms
+✅ Average processing time: 0.03ms per prompt
+✅ Performance target met (<50ms per prompt)
+✅ Detected 3 malicious prompts out of 8
+✅ Processing time consistency verified
+
+=== Testing End-to-End Integration ===
+✅ Case 1: Simple benign query - Expected: Benign, Got: Benign (Confidence: 0.00)
+✅ Case 2: Classic prompt injection - Expected: Malicious, Got: Malicious (Confidence: 0.57)
+❌ Case 3: Potential ESA attack - Expected: Malicious, Got: Benign (Confidence: 0.00)
+✅ Case 4: Legitimate technical question - Expected: Benign, Got: Benign (Confidence: 0.00)
+✅ Integration accuracy: 75.00% (3/4)
+
+============================================================
+🎯 Enhanced Detection Test Results:
+✅ PASS: feature_extraction
+✅ PASS: esa_detection
+✅ PASS: cap_detection
+✅ PASS: multi_granularity_detection
+✅ PASS: ensemble_detection
+✅ PASS: dynamic_thresholds
+✅ PASS: performance
+✅ PASS: integration
+
+🏁 Overall: ✅ ALL TESTS PASSED

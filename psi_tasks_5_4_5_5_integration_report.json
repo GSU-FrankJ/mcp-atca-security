@@ -1,0 +1,24 @@
+{
+  "timestamp": 1753099670.203257,
+  "total_tests": 8,
+  "passed_tests": 5,
+  "success_rate": 62.5,
+  "test_results": {
+    "dependency_check": true,
+    "psi_integration": false,
+    "anomaly_detection": false,
+    "modular_architecture": false,
+    "performance_optimization": true,
+    "configuration_apis": true,
+    "batch_processing": true,
+    "graceful_degradation": true
+  },
+  "dependency_status": {
+    "Core PSI": false,
+    "Anomaly Config": false,
+    "Modular Architecture": false,
+    "NumPy": true,
+    "Scikit-learn": true
+  },
+  "summary": "Integration test completed"
+}

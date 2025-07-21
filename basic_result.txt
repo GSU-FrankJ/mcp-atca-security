@@ -1,0 +1,7 @@
+Testing PSI imports...
+❌ Import error: cannot import name 'TIADSEngine' from 'mcp_security.core.tiads' (unknown location)
+
+Possible issues:
+1. Missing dependencies - run: pip install sentence-transformers faiss-cpu nltk
+2. PYTHONPATH not set correctly
+3. Missing modules in the PSI package
